@@ -2,7 +2,6 @@ import itertools, imageio, torch, random
 import matplotlib.pyplot as plt
 import numpy as np
 from torchvision import datasets
-from scipy.misc import imresize
 from torch.autograd import Variable
 import os, time, pickle, argparse, network, util, itertools
 import torch
@@ -104,7 +103,8 @@ def data_load(path, subfolder, transform, batch_size, shuffle=False):
 def imgs_resize(imgs, resize_scale = 286):
     outputs = torch.FloatTensor(imgs.size()[0], imgs.size()[1], resize_scale, resize_scale)
     for i in range(imgs.size()[0]):
-        img = imresize(imgs[i].numpy(), [resize_scale, resize_scale])
+        img = Image.fromarray(imgs[1]).resize([resize_scale,resize_scale],resample=Image.BICUBIC)
+        #img=imresize(imgs[i].numpy(), [resize_scale, resize_scale])
         outputs[i] = torch.FloatTensor((img.transpose(2, 0, 1).astype(np.float32).reshape(-1, imgs.size()[1], resize_scale, resize_scale) - 127.5) / 127.5)
 
     return outputs
